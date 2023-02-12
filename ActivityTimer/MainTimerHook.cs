@@ -45,7 +45,9 @@ namespace ActivityTimer
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern int MessageBoxW(IntPtr hWnd, [param: MarshalAs(UnmanagedType.LPWStr)] string lpText, [param: MarshalAs(UnmanagedType.LPWStr)] string lpCaption, UInt32 uType);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+
         [return: MarshalAs(UnmanagedType.Bool)]
 
         private static extern bool GetMessage(out IntPtr lpMsg, IntPtr hWnd, uint wMsgMin, uint wMsgMax);
@@ -83,7 +85,7 @@ namespace ActivityTimer
             subs = new TimeTrigger();
 
             publish.Triggered += subs.OnPeripheralActivity;
-            //publish.checkTime += MainTimerHook.OnActivity;
+            
             _hookID = SetHook(_procedure, null);
 
             _hookID_2 = SetHook(null, _procedure_2);

@@ -1,0 +1,16 @@
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\net5.0-windows\ActivityTimer.exe
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\net5.0-windows\ActivityTimer.deps.json
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\net5.0-windows\ActivityTimer.runtimeconfig.json
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\net5.0-windows\ActivityTimer.runtimeconfig.dev.json
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\net5.0-windows\ActivityTimer.dll
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\net5.0-windows\ref\ActivityTimer.dll
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\net5.0-windows\ActivityTimer.pdb
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\net5.0-windows\ActivityTimer.csproj.AssemblyReference.cache
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\net5.0-windows\ActivityTimer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\net5.0-windows\ActivityTimer.AssemblyInfoInputs.cache
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\net5.0-windows\ActivityTimer.AssemblyInfo.cs
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\net5.0-windows\ActivityTimer.csproj.CoreCompileInputs.cache
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\net5.0-windows\ActivityTimer.dll
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\net5.0-windows\ref\ActivityTimer.dll
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\net5.0-windows\ActivityTimer.pdb
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\net5.0-windows\ActivityTimer.genruntimeconfig.cache

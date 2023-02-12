@@ -1,0 +1,14 @@
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\netcoreapp3.1\ActivityTimer.exe
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\netcoreapp3.1\ActivityTimer.deps.json
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\netcoreapp3.1\ActivityTimer.runtimeconfig.json
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\netcoreapp3.1\ActivityTimer.runtimeconfig.dev.json
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\netcoreapp3.1\ActivityTimer.dll
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\bin\Debug\netcoreapp3.1\ActivityTimer.pdb
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\netcoreapp3.1\ActivityTimer.csproj.AssemblyReference.cache
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\netcoreapp3.1\ActivityTimer.AssemblyInfoInputs.cache
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\netcoreapp3.1\ActivityTimer.AssemblyInfo.cs
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\netcoreapp3.1\ActivityTimer.csproj.CoreCompileInputs.cache
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\netcoreapp3.1\ActivityTimer.dll
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\netcoreapp3.1\ActivityTimer.pdb
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\netcoreapp3.1\ActivityTimer.genruntimeconfig.cache
+C:\Users\Host\Documents\Programming\Programming\C#\ActivityTimer\ActivityTimer\obj\Debug\netcoreapp3.1\ActivityTimer.GeneratedMSBuildEditorConfig.editorconfig

@@ -20,6 +20,7 @@ namespace ActivityTimer
         private static int _runOnce = 0;
         public static int x = 0;
         private static int _currentState = 0;
+        private static double _mins = 5;
 
         private const int WH_KEYBOARD_LL = 13;
         private const int WH_MOUSE_LL = 14;
@@ -41,9 +42,9 @@ namespace ActivityTimer
         public static double _tempRunTimeCompare = 0;
         public static int? _tempRunTimeSubtraction = 0;
 
-        private static List<double> lsta = new List<double>();
+        private static List<double> lsta = new List<double>(2);
 
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int MessageBoxW(IntPtr hWnd, [param: MarshalAs(UnmanagedType.LPWStr)] string lpText, [param: MarshalAs(UnmanagedType.LPWStr)] string lpCaption, UInt32 uType);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -116,6 +117,7 @@ namespace ActivityTimer
         {
             _flip = true;
             _flipTimeWatcher = true;
+            
 
             _xflipcalc++;
             _timer = new System.Timers.Timer(10000);
@@ -139,9 +141,10 @@ namespace ActivityTimer
         }
         private void timerInterval(object sender, System.Timers.ElapsedEventArgs e)
         {
+
+            Console.WriteLine("TimeI");
             
-            //TimeSpan ts_2 = stopWatch.Elapsed;
-            if(_timer != null) { 
+            if (_timer != null) { 
                 _timer.Elapsed -= timerInterval;
                 _timer.Enabled = false;
                 
@@ -149,15 +152,18 @@ namespace ActivityTimer
             if (_flip == true) {
 
                 Console.WriteLine("True");
-                _flipTimeWatcher_2 = false;
+                //_flipTimeWatcher_2 = false;
 
 
             }
-            if(_flip == false && (_timer == null))
-            {
+            if (lsta.Count == 2) { 
+
+                if((_flip == false) && (_timer == null) && (lsta[1]-lsta[0]) > 5 && _flipTimeWatcher_2 == false )
+                {
                 
-                TimeStopper();
-                Console.WriteLine("False");
+                    TimeStopper();
+                    Console.WriteLine("False");
+                }
             }
             //Console.WriteLine(stopWatch.Elapsed);
         }
@@ -232,7 +238,7 @@ namespace ActivityTimer
                             _tempRunTime = ts.TotalSeconds;
                             _flip = false;
                             Console.WriteLine("Key");
-
+                            CompareTimes();
                             ReleaseHook(_hookID);
                             _hookID = SetHook(_procedure, null);
 
@@ -243,15 +249,14 @@ namespace ActivityTimer
 
                         _timer = null;
                         _tempRunTime = ts.TotalSeconds;
-                        lsta.Add(_tempRunTime);
-
+                        CompareTimes();
                         Console.WriteLine(_tempRunTime);
-                        Console.WriteLine(lsta[_xflipcalc-1]);
-
+                        //Console.WriteLine(lsta[_xflipcalc-1]);
+                        Console.WriteLine(lsta.Count);
+ 
+                       }
                     }
-                }
-                
-                
+ 
             }
             catch (Exception e)
             {
@@ -263,8 +268,6 @@ namespace ActivityTimer
 
         }
 
-            
-        
         public static IntPtr HCallbackMouse(int nCode, IntPtr wParam, IntPtr lParam)
         {
             TimeSpan ts = stopWatch.Elapsed;
@@ -303,6 +306,35 @@ namespace ActivityTimer
             }
             
             return CallNextHookEx(_hookID_2, nCode, wParam, lParam);
+        }
+        private static void CompareTimes()
+        {
+
+            if (lsta.Count == 2)
+            {
+                Console.WriteLine(lsta[1]-lsta[0]);
+
+                if (lsta[1] - lsta[0] > _mins)
+                {
+
+                    Console.WriteLine("Yli viisi");
+                    _flipTimeWatcher_2 = false;
+
+                }
+                if (lsta[1] - lsta[0] < _mins)
+                {
+                    lsta.RemoveAt(0);
+                    Console.WriteLine("Alle viisi");
+                }
+            }
+            else
+            {
+                if (lsta.Count <= 1)
+                {
+                    lsta.Add(_tempRunTime);
+                    Console.WriteLine(lsta.Count);
+                }
+            }
         }
         private static void ReleaseHook(IntPtr hookId)
         {

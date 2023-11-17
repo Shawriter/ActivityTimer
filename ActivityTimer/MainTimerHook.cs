@@ -2,8 +2,6 @@
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace ActivityTimer
@@ -16,34 +14,31 @@ namespace ActivityTimer
         private static IntPtr _hookID = IntPtr.Zero;
         private static IntPtr _hookID_2 = IntPtr.Zero;
 
-        private static int _xflipcalc = 0;
         private static int _runOnce = 0;
         public static int x = 0;
-        private static int _currentState = 0;
-        private static double _mins = 5;
+        private static double sec = 30.0; //Change this to change how long to be inactive before the timer stops
 
         private const int WH_KEYBOARD_LL = 13;
         private const int WH_MOUSE_LL = 14;
         private const int WM_KEYDOWN = 0x0100;
         private const int WH_LBUTTONDOWN = 0x0201;
 
-        public static bool _flip = true;
+        public static bool _flip = true; //Boolean flipswitches to ensure running blocks of code only when needed
+        public static bool _flip_2 = true;
         public static bool _flipTimeWatcher = true;
         public static bool _flipTimeWatcher_2 = true;
 
-        private static System.Timers.Timer _timer;
         public static Stopwatch stopWatch = new Stopwatch();
-        private static DateTime _startTime;
+        public static Stopwatch stopWatch_2 = new Stopwatch();
+        public static TimeSpan ts = stopWatch.Elapsed;
+        public static TimeSpan ts_2 = stopWatch_2.Elapsed;
 
         private static Publish publish;
         private static TimeTrigger subs;
 
-        public static double _tempRunTime = 0;
-        public static double _tempRunTimeCompare = 0;
-        public static int? _tempRunTimeSubtraction = 0;
-
-        private static List<double> lsta = new List<double>(2);
-
+        private static double _tempRunTime;
+        private static double _tempRunTime_2;
+ 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int MessageBoxW(IntPtr hWnd, [param: MarshalAs(UnmanagedType.LPWStr)] string lpText, [param: MarshalAs(UnmanagedType.LPWStr)] string lpCaption, UInt32 uType);
 
@@ -71,22 +66,25 @@ namespace ActivityTimer
 
         private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
         private delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
-        private delegate void delegatePointer();
-
+        
         [STAThread]
         static void Main(string[] args)
         {
 
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             Console.WriteLine("ActivityTimer 1.0");
+            Console.WriteLine("Press any key to start the timer. " + "\n" +
+                "Timer will automatically stop after 30 seconds of not pressing the keyboard or the mouse.");
+            Console.ReadKey();
 
             publish = new Publish();
             subs = new TimeTrigger();
-
+            SetTempRunTime();
             publish.Triggered += subs.OnPeripheralActivity;
-            
+
             _hookID = SetHook(_procedure, null);
 
             _hookID_2 = SetHook(null, _procedure_2);
@@ -98,93 +96,105 @@ namespace ActivityTimer
 
         }
 
-        private static void TimeStarter(double _tempRunTime) //_tempRunTime not used for now
+        private static void TimeStarter() 
         {
-
-            //_flip = true;
-            _xflipcalc++;
-
+            DateTime date = DateTime.Now;
             _flipTimeWatcher = false;
 
             if (_flipTimeWatcher == false)
             {
                 stopWatch.Start();
+                stopWatch_2.Start();
+                if (_tempRunTime > 0.1)
+                { //If not this if clause, the program will print twice at the start 
+
+                    Console.WriteLine("Timer started" + " at " + stopWatch.Elapsed + " Hours/minutes/seconds " + "\n" + date + "\n");
+                }
             }
 
 
+
         }
-        private void TimeStopper()
+        public static void TimeStopper()
         {
+            DateTime date = DateTime.Now;
             _flip = true;
             _flipTimeWatcher = true;
             
+            if(_flip_2 == false) { 
 
-            _xflipcalc++;
-            _timer = new System.Timers.Timer(10000);
-            _timer.Elapsed += timerInterval;
+                 Console.WriteLine("Timer stopped at" + " " + stopWatch.Elapsed + " Hours/minutes/seconds " + "\n" + date + "\n");
+                 _flip_2 = true;
+                 stopWatch.Stop();
+                 Console.WriteLine("Press any key to start the timer again");
+                 Console.ReadKey();
+            }
 
-            Console.WriteLine("Time stopped at" + " " + stopWatch.Elapsed);
-
-            stopWatch.Stop();
         }
         //Not using Task due to target framework restrictions
-        private void TimeWatcher() {
-
-            
-            _timer = new System.Timers.Timer(10000);
-        
-            _timer.Elapsed += timerInterval;
-            _timer.Enabled = true;
-            Console.WriteLine("Timer started" + " " + stopWatch.Elapsed);
-
-
-        }
-        private void timerInterval(object sender, System.Timers.ElapsedEventArgs e)
+        class TimeWatcherClass
         {
-
-            Console.WriteLine("TimeI");
-            
-            if (_timer != null) { 
-                _timer.Elapsed -= timerInterval;
-                _timer.Enabled = false;
-                
-            }
-            if (_flip == true) {
-
-                Console.WriteLine("True");
-                //_flipTimeWatcher_2 = false;
-
-
-            }
-            if (lsta.Count == 2) { 
-
-                if((_flip == false) && (_timer == null) && (lsta[1]-lsta[0]) > 5 && _flipTimeWatcher_2 == false )
-                {
-                
-                    TimeStopper();
-                    Console.WriteLine("False");
-                }
-            }
-            //Console.WriteLine(stopWatch.Elapsed);
-        }
-
-        //Unable to set messagefilter in any way to console window, console window belongs to the CSRSS service. CSRSS is a critical system service that is protected and cannot be hooked without special debug privileges.
-        /*protected override void WndProc(ref Message m)
-        {
-
-            if(m.Msg)
+            private static System.Timers.Timer _timer;
+            public void TimeWatcher()
             {
-                
+                if (_timer == null)
+                {
+                    _timer = new System.Timers.Timer(2000); //Every 2 seconds check the time difference between temptimes
+                    _timer.Elapsed += TimerInterval;
+                    _timer.AutoReset = true;
+                    _timer.Enabled = true;
+                }
+
             }
 
-            base.WndProc(ref m);
+        }
+       
+        private static void TimerInterval(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            
+            SetTempRunTime();
+            _tempRunTime_2 = stopWatch_2.Elapsed.TotalSeconds;
+            CompareTimes();
 
-        }*/
+        }
 
+        private static void CompareTimes()
+        {
 
+           
+            if(_tempRunTime_2 == 0.0)
+            {
+                stopWatch_2.Start();
+            }
+            if (_tempRunTime_2 >= sec && (_tempRunTime_2 != 0.0)) 
+            {
+
+                TimeStopper();
+                stopWatch_2.Reset();
+               
+            }
+            //Console.WriteLine("Pass");
+
+        }
+
+        private static void SetTempRunTime() {
+
+ 
+            if (_tempRunTime < 1)
+            {
+
+                _tempRunTime = stopWatch.Elapsed.TotalSeconds;
+                
+            }
+            else
+            {
+                _tempRunTime = stopWatch.Elapsed.TotalSeconds;  
+            }
+
+        }
         private static IntPtr SetHook(LowLevelKeyboardProc procKey, LowLevelMouseProc procMouse)
         {
-            while(_runOnce <= 1)
+            while (_runOnce <= 1)
             {
                 _runOnce = 2;
             }
@@ -214,53 +224,51 @@ namespace ActivityTimer
             catch (Exception e)
             {
                 AppDestroy(e);
-                
+
             }
             return IntPtr.Zero;
         }
 
         private static IntPtr HCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            TimeSpan ts = stopWatch.Elapsed;
+
 
             try {
                 if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN) // Pointer WM_KEYDOWN url for documentation windows/desktop/legacy/ms644985(v=vs.85) The identifier of the keyboard message. This parameter can be one of the following messages: WM_KEYDOWN, WM_KEYUP, WM_SYSKEYDOWN, or WM_SYSKEYUP.
                 {
 
-                    if (_flip == true) //&& (_timer == null)
+                    if (_flip == true) 
                     {
-                       
+
                         Keys key = (Keys)Marshal.ReadInt32(lParam);
 
                         if (((key >= Keys.A && key <= Keys.Z) | key == Keys.F12 | (key >= Keys.D0 && key <= Keys.D9) | key == Keys.Enter)) //_flip is initialized as true at startup
                         {
 
-                            _tempRunTime = ts.TotalSeconds;
+
+                            SetTempRunTime();
                             _flip = false;
-                            Console.WriteLine("Key");
-                            CompareTimes();
+                            _flip_2 = false;
                             ReleaseHook(_hookID);
                             _hookID = SetHook(_procedure, null);
+                            
 
                         }
 
                     }
                     else {
 
-                        _timer = null;
-                        _tempRunTime = ts.TotalSeconds;
-                        CompareTimes();
-                        Console.WriteLine(_tempRunTime);
-                        //Console.WriteLine(lsta[_xflipcalc-1]);
-                        Console.WriteLine(lsta.Count);
- 
-                       }
+                        stopWatch_2.Reset();
+                        _flip_2 = false;
+                        SetTempRunTime();
+
                     }
- 
+                }
+
             }
             catch (Exception e)
             {
-                
+
                 AppDestroy(e);
 
             }
@@ -270,72 +278,45 @@ namespace ActivityTimer
 
         public static IntPtr HCallbackMouse(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            TimeSpan ts = stopWatch.Elapsed;
+
 
             try
             {
 
                 if ((nCode >= 0 && wParam == (IntPtr)WH_LBUTTONDOWN)) //_flip is initialized as true at startup
                 {
-                    if (_flip == true) // && (_timer == null)
+                    if (_flip == true) 
                     {
-                        
-                        Console.WriteLine("Mouse");
+                        SetTempRunTime();
                         _flip = false;
-
+                        _flip_2 = false;
                         ReleaseHook(_hookID_2);
                         _hookID_2 = SetHook(null, _procedure_2);
-
+                        
                     }
                     else {
 
-                        _timer = null;
-                        _tempRunTime = ts.TotalSeconds;
-                        Console.WriteLine(_tempRunTime);
-
+                        stopWatch_2.Reset();
+                        _flip_2 = false;
+                        SetTempRunTime();
+                        
                     }
                 }
-                
-               
+
+
             }
             catch (Exception e)
             {
-                
+
                 AppDestroy(e);
 
             }
-            
+
             return CallNextHookEx(_hookID_2, nCode, wParam, lParam);
         }
-        private static void CompareTimes()
-        {
-
-            if (lsta.Count == 2)
-            {
-                Console.WriteLine(lsta[1]-lsta[0]);
-
-                if (lsta[1] - lsta[0] > _mins)
-                {
-
-                    Console.WriteLine("Yli viisi");
-                    _flipTimeWatcher_2 = false;
-
-                }
-                if (lsta[1] - lsta[0] < _mins)
-                {
-                    lsta.RemoveAt(0);
-                    Console.WriteLine("Alle viisi");
-                }
-            }
-            else
-            {
-                if (lsta.Count <= 1)
-                {
-                    lsta.Add(_tempRunTime);
-                    Console.WriteLine(lsta.Count);
-                }
-            }
-        }
+        
+       
+      
         private static void ReleaseHook(IntPtr hookId)
         {
             UnhookWindowsHookEx(hookId);
@@ -350,7 +331,6 @@ namespace ActivityTimer
         {
 
             public event EventHandler? Triggered;
-            public event EventHandler? checkTime;
             public void OnPeripheralPressed()
 
             {
@@ -363,36 +343,23 @@ namespace ActivityTimer
             }
 
         }
-        class TimeTrigger : MainTimerHook
+        class TimeTrigger
         {
-            
+
             public void OnPeripheralActivity(object sender, EventArgs e)
 
             {
                 
-                if (x < 1)
-                {
-                    
-                    x = 1;
-
-                }
-                else if (x < 2) {
-
-                    x = 2;
-
-                }
-                else
-                {
-
-                    TimeStarter(_tempRunTime);
-                    TimeWatcher();
-                }
-
+                TimeStarter();
+                TimeWatcherClass timer = new TimeWatcherClass();
+                timer.TimeWatcher();
+               
             }
             
+         
 
         }
        
     }
 
-    }
+  }
